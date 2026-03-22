@@ -73,6 +73,8 @@ const features = [
   },
 ];
 
+
+
 const howItWorks = [
   {
     step: 1,
@@ -112,35 +114,23 @@ const Landing = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      try {
-        // Get total users
-        const { count: total, error: totalError } = await supabase
-          .from("profiles")
-          .select("id", { count: "exact", head: true });
+      // Get total users
+      const { count: total } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true });
+      
+      if (total !== null) setTotalUsers(total);
 
-        if (totalError) {
-          console.error("Error fetching total users:", totalError);
-        } else if (total !== null) {
-          setTotalUsers(total);
-        }
-
-        // Get weekly active users (last 7 days)
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-
-        const { count: weekly, error: weeklyError } = await supabase
-          .from("profiles")
-          .select("id", { count: "exact", head: true })
-          .gte("last_active", oneWeekAgo.toISOString());
-
-        if (weeklyError) {
-          console.error("Error fetching weekly users:", weeklyError);
-        } else if (weekly !== null) {
-          setWeeklyUsers(weekly);
-        }
-      } catch (err) {
-        console.error("fetchStats error:", err);
-      }
+      // Get weekly active users (last 7 days)
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      
+      const { count: weekly } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true })
+        .gte("last_active", oneWeekAgo.toISOString());
+        
+      if (weekly !== null) setWeeklyUsers(weekly);
     };
 
     fetchStats();
@@ -456,10 +446,7 @@ const Landing = () => {
 
               {/* Dynamic Stats row */}
               <div className="flex items-center gap-8 pt-6 border-t border-border/50">
-                <div
-                  className="text-left animate-fade-up"
-                  style={{ animationDelay: "0.2s" }}
-                >
+                <div className="text-left animate-fade-up" style={{ animationDelay: "0.2s" }}>
                   <p className="text-3xl font-bold text-foreground flex items-center gap-1">
                     <Counter end={totalUsers} />+
                   </p>
@@ -467,13 +454,10 @@ const Landing = () => {
                     Tổng Người Dùng
                   </p>
                 </div>
-
+                
                 <div className="w-px h-12 bg-border/50"></div>
 
-                <div
-                  className="text-left animate-fade-up"
-                  style={{ animationDelay: "0.3s" }}
-                >
+                <div className="text-left animate-fade-up" style={{ animationDelay: "0.3s" }}>
                   <p className="text-3xl font-bold text-gradient-flame flex items-center gap-1">
                     <Counter end={weeklyUsers} />+
                   </p>
@@ -482,6 +466,7 @@ const Landing = () => {
                   </p>
                 </div>
               </div>
+
             </div>
 
             {/* Right - Hero visual */}
@@ -586,10 +571,11 @@ const Landing = () => {
               </span>
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-4 leading-tight">
-              We <span className="font-serif-display italic">communicate</span>
+              We{" "}
+              <span className="font-serif-display italic">communicate</span>
               <br />
-              <span className="text-gradient-romantic">dynamically</span> with
-              each other.
+              <span className="text-gradient-romantic">dynamically</span>{" "}
+              with each other.
             </h2>
             <p className="text-muted-foreground">
               Tất cả những gì bạn cần để tìm kiếm và kết nối với người ấy
@@ -632,6 +618,8 @@ const Landing = () => {
           </div>
         </div>
       </section>
+
+
 
       {/* ══════════ HOW IT WORKS ══════════ */}
       <section id="how-it-works" className="py-20 md:py-32 relative">
@@ -748,6 +736,7 @@ const Landing = () => {
         </div>
       </section>
 
+
       {/* ══════════ CTA SECTION ══════════ */}
       <section className="py-20 md:py-32 relative">
         <div className="relative z-10 max-w-4xl mx-auto px-6">
@@ -825,10 +814,7 @@ const Landing = () => {
               {
                 title: "Kết nối",
                 links: [
-                  {
-                    label: "Facebook",
-                    href: "https://www.facebook.com/profile.php?id=61587141010574",
-                  },
+                  { label: "Facebook", href: "https://www.facebook.com/profile.php?id=61587141010574" },
                 ],
               },
             ].map((col) => (

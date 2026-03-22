@@ -35,7 +35,7 @@ BEGIN
     streak_count = 15,         -- Chuỗi 15 ngày (Lửa Xanh)
     level = 2,                 -- Đạt level 2 (Có đặc quyền)
     happiness_score = 90,      -- Hạnh phúc cao
-    last_chat_date = CURRENT_DATE, -- Cài ngày nhắn gần nhất là hôm nay
+    last_chat_date = (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::DATE, -- Cài ngày nhắn gần nhất là hôm nay
     pet_shape = 'cat'          -- Cho hình dạng linh vật là mèo
   WHERE match_id = mid;
 

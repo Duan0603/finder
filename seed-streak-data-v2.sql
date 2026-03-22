@@ -42,7 +42,7 @@ BEGIN
     streak_count = 15,
     level = 2,
     happiness_score = 90,
-    last_chat_date = CURRENT_DATE,
+    last_chat_date = (NOW() AT TIME ZONE 'Asia/Ho_Chi_Minh')::DATE,
     pet_shape = 'cat'
   WHERE match_id = mid;
 
