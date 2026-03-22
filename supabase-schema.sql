@@ -79,35 +79,52 @@ ALTER TABLE matches ENABLE ROW LEVEL SECURITY;
 ALTER TABLE messages ENABLE ROW LEVEL SECURITY;
 
 -- Profiles: anyone auth'd can read, only owner can update
+DROP POLICY IF EXISTS "Profiles readable by authenticated users" ON profiles;
 CREATE POLICY "Profiles readable by authenticated users" ON profiles
   FOR SELECT USING (auth.role() = 'authenticated');
+
+DROP POLICY IF EXISTS "Users can update own profile" ON profiles;
 CREATE POLICY "Users can update own profile" ON profiles
   FOR UPDATE USING (auth.uid() = id);
 
 -- Likes
+DROP POLICY IF EXISTS "Users can insert likes" ON likes;
 CREATE POLICY "Users can insert likes" ON likes
   FOR INSERT WITH CHECK (auth.uid() = from_user);
+
+DROP POLICY IF EXISTS "Users can read own likes" ON likes;
 CREATE POLICY "Users can read own likes" ON likes
   FOR SELECT USING (auth.uid() = from_user OR auth.uid() = to_user);
 
 -- Matches
+DROP POLICY IF EXISTS "Users can read own matches" ON matches;
 CREATE POLICY "Users can read own matches" ON matches
   FOR SELECT USING (auth.uid() = user1 OR auth.uid() = user2);
+
+DROP POLICY IF EXISTS "System can insert matches" ON matches;
 CREATE POLICY "System can insert matches" ON matches
   FOR INSERT WITH CHECK (true);
 
 -- Messages
+DROP POLICY IF EXISTS "Match users can read messages" ON messages;
 CREATE POLICY "Match users can read messages" ON messages
   FOR SELECT USING (
     EXISTS (SELECT 1 FROM matches WHERE id = match_id AND (user1 = auth.uid() OR user2 = auth.uid()))
   );
+
+DROP POLICY IF EXISTS "Match users can send messages" ON messages;
+DROP POLICY IF EXISTS "Match users can send messages" ON messages;
 CREATE POLICY "Match users can send messages" ON messages
   FOR INSERT WITH CHECK (
     auth.uid() = sender_id AND
     EXISTS (SELECT 1 FROM matches WHERE id = match_id AND (user1 = auth.uid() OR user2 = auth.uid()))
   );
+
+DROP POLICY IF EXISTS "Users can delete own messages" ON messages;
 CREATE POLICY "Users can delete own messages" ON messages
   FOR DELETE USING (auth.uid() = sender_id);
+
+DROP POLICY IF EXISTS "Match users can update messages" ON messages;
 CREATE POLICY "Match users can update messages" ON messages
   FOR UPDATE USING (
     EXISTS (SELECT 1 FROM matches WHERE id = match_id AND (user1 = auth.uid() OR user2 = auth.uid()))
@@ -147,9 +164,35 @@ CREATE TRIGGER on_like_check_match
 -- Enable realtime for messages
 -- ============================================
 
-ALTER PUBLICATION supabase_realtime ADD TABLE messages;
-ALTER PUBLICATION supabase_realtime ADD TABLE likes;
-ALTER PUBLICATION supabase_realtime ADD TABLE matches;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' 
+    AND schemaname = 'public' 
+    AND tablename = 'messages'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.messages;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' 
+    AND schemaname = 'public' 
+    AND tablename = 'likes'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.likes;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_publication_tables 
+    WHERE pubname = 'supabase_realtime' 
+    AND schemaname = 'public' 
+    AND tablename = 'matches'
+  ) THEN
+    ALTER PUBLICATION supabase_realtime ADD TABLE public.matches;
+  END IF;
+END $$;
 
 -- ============================================
 -- Storage bucket for avatars
@@ -161,3 +204,22 @@ ALTER PUBLICATION supabase_realtime ADD TABLE matches;
 --    - INSERT: allow authenticated users
 --    - SELECT: allow all (public)
 -- ============================================
+-- ============================================
+-- Public Statistics RPC
+-- ============================================
+
+CREATE OR REPLACE FUNCTION get_site_stats()
+RETURNS JSON AS $$
+DECLARE
+  result JSON;
+BEGIN
+  SELECT json_build_object(
+    'total_users', (SELECT count(*) FROM profiles),
+    'weekly_users', (SELECT count(*) FROM profiles WHERE last_active >= NOW() - INTERVAL '7 days')
+  ) INTO result;
+  RETURN result;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+GRANT EXECUTE ON FUNCTION get_site_stats() TO anon;
+GRANT EXECUTE ON FUNCTION get_site_stats() TO authenticated;

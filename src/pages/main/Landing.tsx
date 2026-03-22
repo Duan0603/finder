@@ -114,23 +114,11 @@ const Landing = () => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      // Get total users
-      const { count: total } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true });
-      
-      if (total !== null) setTotalUsers(total);
-
-      // Get weekly active users (last 7 days)
-      const oneWeekAgo = new Date();
-      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-      
-      const { count: weekly } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true })
-        .gte("last_active", oneWeekAgo.toISOString());
-        
-      if (weekly !== null) setWeeklyUsers(weekly);
+      const { data, error } = await supabase.rpc("get_site_stats");
+      if (!error && data) {
+        setTotalUsers(data.total_users || 0);
+        setWeeklyUsers(data.weekly_users || 0);
+      }
     };
 
     fetchStats();
