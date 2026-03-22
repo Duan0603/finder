@@ -1,0 +1,161 @@
+{
+  "navigation": {
+    "home": "Home",
+    "explore": "Explore",
+    "matches": "Matches",
+    "messages": "Messages",
+    "profile": "Profile"
+  },
+  "explore": {
+    "title": "Find Companions",
+    "subtitle": "Connect with students around you",
+    "search_placeholder": "Search students...",
+    "views": {
+      "map": "Map",
+      "grid": "Grid",
+      "list": "List"
+    },
+    "filters": {
+      "title": "Filters",
+      "clear": "Clear",
+      "apply": "Apply",
+      "distance": "Distance",
+      "age": "Age",
+      "gender": "Gender",
+      "interests": "Interests",
+      "all": "All",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
+    "card": {
+      "view_profile": "View Profile",
+      "message": "Message",
+      "match_percent": "Match",
+      "common_interests": "common interests"
+    }
+  },
+  "profile": {
+    "completion": "Profile completed {{percent}}%",
+    "get_more_likes": "GET MORE LIKES →",
+    "edit": "EDIT",
+    "premium": "PREMIUM",
+    "account_security": "Account & Security",
+    "language": "Language",
+    "display_language": "Display language",
+    "dark_mode": "Dark Mode",
+    "light_mode": "Light Mode",
+    "notifications": "Notifications",
+    "gold_plan": "Manage Gold Plan",
+    "other": "Other",
+    "support": "Support & Help",
+    "privacy_policy": "Privacy Policy",
+    "sign_out": "SIGN OUT",
+    "no_name_warning": "⚠️ Update your name to appear in Explore",
+    "no_info": "No info yet",
+    "edit_modal": {
+      "title": "Edit Profile",
+      "subtitle": "Refresh yourself to stand out",
+      "full_name": "Full Name",
+      "name_placeholder": "Display name",
+      "age": "Age",
+      "gender": "Gender",
+      "select": "Select...",
+      "male": "Male",
+      "female": "Female",
+      "other": "Other",
+      "city": "City",
+      "city_placeholder": "Current location",
+      "bio": "About me",
+      "bio_placeholder": "Tell your story...",
+      "looking_for": "Looking for",
+      "all": "All",
+      "interests": "Interests",
+      "save": "UPDATE PROFILE",
+      "name_required": "Name cannot be empty",
+      "name_required_desc": "Please enter your display name.",
+      "saved": "Saved! ✅",
+      "error": "Error"
+    },
+    "notifications_modal": {
+      "title": "Notifications",
+      "subtitle": "Manage your notification preferences",
+      "new_matches": "New Matches",
+      "new_matches_desc": "Get notified when you match with someone",
+      "new_messages": "New Messages",
+      "new_messages_desc": "Get notified for incoming messages",
+      "connection_requests": "Connection Requests",
+      "connection_requests_desc": "Get notified when someone wants to connect",
+      "saved": "Preferences saved! ✅"
+    },
+    "gold_modal": {
+      "title": "Choose Your Plan",
+      "subtitle": "Unlock premium features",
+      "basic": "Basic",
+      "basic_price": "Free",
+      "basic_features": ["5 likes per day", "Standard matching", "Text messaging"],
+      "plus": "Plus",
+      "plus_price": "99K/month",
+      "plus_features": ["Unlimited likes", "See who liked you", "Priority matching", "Read receipts"],
+      "premium": "Premium",
+      "premium_price": "199K/month",
+      "premium_features": ["All Plus features", "Boost profile weekly", "Super likes", "Incognito mode", "Video calls"],
+      "current_plan": "Current Plan",
+      "upgrade": "Upgrade",
+      "popular": "POPULAR",
+      "coming_soon": "Coming Soon"
+    },
+    "support_modal": {
+      "title": "Support & Help",
+      "subtitle": "Report a problem or get help",
+      "category": "Category",
+      "select_category": "Select category...",
+      "categories": {
+        "bug": "Bug / Error",
+        "account": "Account issue",
+        "safety": "Safety concern",
+        "feedback": "Feedback / Suggestion",
+        "other": "Other"
+      },
+      "description": "Description",
+      "description_placeholder": "Describe your issue in detail...",
+      "email": "Contact email",
+      "email_placeholder": "your@email.com",
+      "submit": "SUBMIT REPORT",
+      "success": "Report submitted! ✅",
+      "success_desc": "We will review your report and get back to you.",
+      "error": "Please fill in all required fields"
+    },
+    "privacy_modal": {
+      "title": "Privacy Policy",
+      "subtitle": "How we protect your data",
+      "last_updated": "Last updated: March 17, 2026",
+      "sections": {
+        "collection": {
+          "title": "1. Data Collection",
+          "content": "We collect information you provide when creating your profile, including your name, age, gender, photos, interests, and location. We also collect usage data to improve the service."
+        },
+        "usage": {
+          "title": "2. Data Usage",
+          "content": "Your data is used to match you with compatible users, display your profile to others, send notifications, and improve our matching algorithms. We never sell your personal data to third parties."
+        },
+        "sharing": {
+          "title": "3. Data Sharing",
+          "content": "Your profile information is shared with other users as part of the matching service. We may share anonymized data with analytics providers. Your exact location is only shared with users you have mutually connected with."
+        },
+        "security": {
+          "title": "4. Data Security",
+          "content": "We use industry-standard encryption and security measures to protect your data. All communications are encrypted in transit. We regularly audit our security practices."
+        },
+        "rights": {
+          "title": "5. Your Rights",
+          "content": "You can access, update, or delete your personal data at any time through your profile settings. You can request a copy of all data we hold about you by contacting support."
+        },
+        "contact": {
+          "title": "6. Contact",
+          "content": "For privacy-related questions, please contact us through the Support & Help section or via our Facebook page."
+        }
+      }
+    }
+  }
+}

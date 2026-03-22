@@ -1,0 +1,161 @@
+{
+  "navigation": {
+    "home": "Trang chủ",
+    "explore": "Khám phá",
+    "matches": "Ghép đôi",
+    "messages": "Tin nhắn",
+    "profile": "Hồ sơ"
+  },
+  "explore": {
+    "title": "Tìm bạn đồng hành",
+    "subtitle": "Kết nối cùng sinh viên quanh bạn",
+    "search_placeholder": "Tìm kiếm sinh viên...",
+    "views": {
+      "map": "Bản đồ",
+      "grid": "Lưới",
+      "list": "Danh sách"
+    },
+    "filters": {
+      "title": "Bộ lọc",
+      "clear": "Xóa lọc",
+      "apply": "Áp dụng",
+      "distance": "Khoảng cách",
+      "age": "Độ tuổi",
+      "gender": "Giới tính",
+      "interests": "Sở thích",
+      "all": "Tất cả",
+      "male": "Nam",
+      "female": "Nữ",
+      "other": "Khác"
+    },
+    "card": {
+      "view_profile": "Xem hồ sơ",
+      "message": "Nhắn tin",
+      "match_percent": "Độ tương hợp",
+      "common_interests": "sở thích chung"
+    }
+  },
+  "profile": {
+    "completion": "Hồ sơ đã hoàn tất {{percent}}%",
+    "get_more_likes": "NHẬN THÊM LƯỢT THÍCH →",
+    "edit": "CHỈNH SỬA",
+    "premium": "CỰC PHẨM",
+    "account_security": "Tài khoản & Bảo mật",
+    "language": "Ngôn ngữ / Language",
+    "display_language": "Hiển thị giao diện",
+    "dark_mode": "Chế độ tối",
+    "light_mode": "Chế độ sáng",
+    "notifications": "Thông báo",
+    "gold_plan": "Quản lý gói Gold",
+    "other": "Khác",
+    "support": "Hỗ trợ & Trợ giúp",
+    "privacy_policy": "Chính sách bảo mật",
+    "sign_out": "ĐĂNG XUẤT",
+    "no_name_warning": "⚠️ Hãy cập nhật tên của bạn để hiển thị trên Khám phá",
+    "no_info": "Chưa cập nhật thông tin",
+    "edit_modal": {
+      "title": "Edit Profile",
+      "subtitle": "Làm mới bản thân để nổi bật hơn",
+      "full_name": "Họ & Tên",
+      "name_placeholder": "Tên hiển thị",
+      "age": "Tuổi",
+      "gender": "Giới tính",
+      "select": "Chọn...",
+      "male": "Nam",
+      "female": "Nữ",
+      "other": "Khác",
+      "city": "Thành phố",
+      "city_placeholder": "Nơi ở hiện tại",
+      "bio": "Giới thiệu bản thân",
+      "bio_placeholder": "Kể câu chuyện của bạn...",
+      "looking_for": "Muốn tìm kiếm",
+      "all": "Tất cả",
+      "interests": "Sở thích",
+      "save": "CẬP NHẬT HỒ SƠ",
+      "name_required": "⚠️ Tên không được để trống",
+      "name_required_desc": "Vui lòng nhập tên hiển thị của bạn.",
+      "saved": "Đã lưu! ✅",
+      "error": "Lỗi"
+    },
+    "notifications_modal": {
+      "title": "Thông báo",
+      "subtitle": "Quản lý cài đặt thông báo",
+      "new_matches": "Tương hợp mới",
+      "new_matches_desc": "Nhận thông báo khi bạn ghép đôi thành công",
+      "new_messages": "Tin nhắn mới",
+      "new_messages_desc": "Nhận thông báo khi có tin nhắn đến",
+      "connection_requests": "Lời mời kết nối",
+      "connection_requests_desc": "Nhận thông báo khi ai đó muốn kết nối",
+      "saved": "Đã lưu tùy chọn! ✅"
+    },
+    "gold_modal": {
+      "title": "Chọn gói của bạn",
+      "subtitle": "Mở khóa tính năng cao cấp",
+      "basic": "Basic",
+      "basic_price": "Miễn phí",
+      "basic_features": ["5 lượt thích mỗi ngày", "Ghép đôi tiêu chuẩn", "Nhắn tin văn bản"],
+      "plus": "Plus",
+      "plus_price": "99K/tháng",
+      "plus_features": ["Thích không giới hạn", "Xem ai đã thích bạn", "Ghép đôi ưu tiên", "Xác nhận đã đọc"],
+      "premium": "Premium",
+      "premium_price": "199K/tháng",
+      "premium_features": ["Tất cả tính năng Plus", "Đẩy hồ sơ mỗi tuần", "Super likes", "Chế độ ẩn danh", "Gọi video"],
+      "current_plan": "Gói hiện tại",
+      "upgrade": "Nâng cấp",
+      "popular": "PHỔ BIẾN",
+      "coming_soon": "Sắp ra mắt"
+    },
+    "support_modal": {
+      "title": "Hỗ trợ & Trợ giúp",
+      "subtitle": "Báo cáo sự cố hoặc nhận trợ giúp",
+      "category": "Danh mục",
+      "select_category": "Chọn danh mục...",
+      "categories": {
+        "bug": "Lỗi / Bug",
+        "account": "Vấn đề tài khoản",
+        "safety": "An toàn / Báo cáo",
+        "feedback": "Góp ý / Đề xuất",
+        "other": "Khác"
+      },
+      "description": "Mô tả",
+      "description_placeholder": "Mô tả chi tiết vấn đề của bạn...",
+      "email": "Email liên hệ",
+      "email_placeholder": "email@example.com",
+      "submit": "GỬI BÁO CÁO",
+      "success": "Đã gửi báo cáo! ✅",
+      "success_desc": "Chúng tôi sẽ xem xét và phản hồi bạn sớm.",
+      "error": "Vui lòng điền đầy đủ thông tin bắt buộc"
+    },
+    "privacy_modal": {
+      "title": "Chính sách bảo mật",
+      "subtitle": "Cách chúng tôi bảo vệ dữ liệu của bạn",
+      "last_updated": "Cập nhật lần cuối: 17/03/2026",
+      "sections": {
+        "collection": {
+          "title": "1. Thu thập dữ liệu",
+          "content": "Chúng tôi thu thập thông tin bạn cung cấp khi tạo hồ sơ, bao gồm tên, tuổi, giới tính, ảnh, sở thích và vị trí. Chúng tôi cũng thu thập dữ liệu sử dụng để cải thiện dịch vụ."
+        },
+        "usage": {
+          "title": "2. Sử dụng dữ liệu",
+          "content": "Dữ liệu của bạn được sử dụng để ghép đôi với những người phù hợp, hiển thị hồ sơ, gửi thông báo và cải thiện thuật toán. Chúng tôi không bao giờ bán dữ liệu cá nhân cho bên thứ ba."
+        },
+        "sharing": {
+          "title": "3. Chia sẻ dữ liệu",
+          "content": "Thông tin hồ sơ của bạn được chia sẻ với người dùng khác như một phần của dịch vụ ghép đôi. Vị trí chính xác chỉ được chia sẻ với người dùng bạn đã kết nối song phương."
+        },
+        "security": {
+          "title": "4. Bảo mật dữ liệu",
+          "content": "Chúng tôi sử dụng mã hóa và các biện pháp bảo mật tiêu chuẩn công nghiệp. Tất cả thông tin truyền tải đều được mã hóa. Chúng tôi thường xuyên kiểm tra bảo mật."
+        },
+        "rights": {
+          "title": "5. Quyền của bạn",
+          "content": "Bạn có thể truy cập, cập nhật hoặc xóa dữ liệu cá nhân bất kỳ lúc nào thông qua cài đặt hồ sơ. Bạn có thể yêu cầu bản sao tất cả dữ liệu bằng cách liên hệ hỗ trợ."
+        },
+        "contact": {
+          "title": "6. Liên hệ",
+          "content": "Với các câu hỏi liên quan đến quyền riêng tư, vui lòng liên hệ qua phần Hỗ trợ & Trợ giúp hoặc qua trang Facebook của chúng tôi."
+        }
+      }
+    }
+  }
+}
