@@ -14,6 +14,7 @@ import Login from "./pages/auth/Login";
 import Onboarding from "./pages/auth/Onboarding";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import ResetPassword from "./pages/auth/ResetPassword";
+import AuthCallback from "./pages/auth/AuthCallback";
 
 // Main pages
 import Landing from "./pages/main/Landing";
@@ -56,7 +57,8 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
         </div>
       );
     // Profile loaded but no name — needs onboarding
-    if (!profile.name || !profile.name.trim()) return <Navigate to="/onboarding" replace />;
+    if (!profile.name || !profile.name.trim())
+      return <Navigate to="/onboarding" replace />;
     // Profile complete — go to explore
     return <Navigate to="/explore" replace />;
   }
@@ -89,6 +91,7 @@ const AppRoutes = () => (
     />
     <Route path="/forgot-password" element={<ForgotPassword />} />
     <Route path="/reset-password" element={<ResetPassword />} />
+    <Route path="/auth/callback" element={<AuthCallback />} />
 
     {/* Main app (with layout) */}
     <Route

@@ -36,7 +36,11 @@ async function chatWithGroq(
 ): Promise<string> {
   try {
     const { data, error } = await supabase.functions.invoke("chat-ai", {
-      body: { partnerProfile, chatHistory: chatHistory.slice(-10), userMessage },
+      body: {
+        partnerProfile,
+        chatHistory: chatHistory.slice(-10),
+        userMessage,
+      },
     });
 
     if (error) {
@@ -384,10 +388,29 @@ function saveLocalChat(
 }
 
 const getFireStyles = (count: number) => {
-  if (count >= 30) return { text: "text-purple-500", bg: "bg-purple-500/10", fill: "fill-purple-500 text-purple-500" };
-  if (count >= 10) return { text: "text-blue-500", bg: "bg-blue-500/10", fill: "fill-blue-500 text-blue-500" };
-  if (count >= 3) return { text: "text-red-500", bg: "bg-red-500/10", fill: "fill-red-500 text-red-500" };
-  return { text: "text-orange-500", bg: "bg-orange-500/10", fill: "fill-orange-500 text-orange-500" };
+  if (count >= 30)
+    return {
+      text: "text-purple-500",
+      bg: "bg-purple-500/10",
+      fill: "fill-purple-500 text-purple-500",
+    };
+  if (count >= 10)
+    return {
+      text: "text-blue-500",
+      bg: "bg-blue-500/10",
+      fill: "fill-blue-500 text-blue-500",
+    };
+  if (count >= 3)
+    return {
+      text: "text-red-500",
+      bg: "bg-red-500/10",
+      fill: "fill-red-500 text-red-500",
+    };
+  return {
+    text: "text-orange-500",
+    bg: "bg-orange-500/10",
+    fill: "fill-orange-500 text-orange-500",
+  };
 };
 
 // ========== MAIN COMPONENT ==========
@@ -1047,7 +1070,7 @@ const Messages = () => {
                   const today = new Date().toISOString().split("T")[0];
                   const hasChattedToday = pet.last_chat_date === today;
                   const styles = getFireStyles(pet.streak_count);
-                  
+
                   return (
                     <span
                       className={`inline-flex items-center gap-0.5 text-xs font-black px-2 py-0.5 rounded-full ${
@@ -1056,12 +1079,14 @@ const Messages = () => {
                           : "text-muted-foreground bg-muted"
                       }`}
                     >
-                      <Flame className={`w-3.5 h-3.5 ${hasChattedToday ? styles.fill : 'fill-muted-foreground text-muted-foreground'}`} />
+                      <Flame
+                        className={`w-3.5 h-3.5 ${hasChattedToday ? styles.fill : "fill-muted-foreground text-muted-foreground"}`}
+                      />
                       {pet.streak_count}
                     </span>
                   );
                 }
-                
+
                 // Mock local chat logic fallback
                 if (streak.active) {
                   return (
@@ -1114,8 +1139,12 @@ const Messages = () => {
             >
               <span className="text-2xl animate-bounce">🎉</span>
               <div>
-                <p className="text-sm font-black tracking-tight leading-tight">CHÚC MỪNG!</p>
-                <p className="text-xs font-medium opacity-90">Kích hoạt Lửa cấp {showMilestone} ngày 🔥</p>
+                <p className="text-sm font-black tracking-tight leading-tight">
+                  CHÚC MỪNG!
+                </p>
+                <p className="text-xs font-medium opacity-90">
+                  Kích hoạt Lửa cấp {showMilestone} ngày 🔥
+                </p>
               </div>
             </motion.div>
           )}
@@ -1123,7 +1152,6 @@ const Messages = () => {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
-
           {allMessages.length === 0 && !aiTyping && (
             <div className="text-center py-12 space-y-4 max-w-[280px] mx-auto animate-fade-in">
               <div className="w-24 h-24 rounded-[2.5rem] bg-gradient-to-br from-primary/5 to-primary/10 flex items-center justify-center mx-auto shadow-inner">
@@ -1570,9 +1598,14 @@ const Messages = () => {
                         )}
                         {(() => {
                           if (convo.pet && convo.pet.streak_count > 0) {
-                            const today = new Date().toISOString().split("T")[0];
-                            const hasChattedToday = convo.pet.last_chat_date === today;
-                            const styles = getFireStyles(convo.pet.streak_count);
+                            const today = new Date()
+                              .toISOString()
+                              .split("T")[0];
+                            const hasChattedToday =
+                              convo.pet.last_chat_date === today;
+                            const styles = getFireStyles(
+                              convo.pet.streak_count,
+                            );
                             return (
                               <span
                                 className={`inline-flex items-center gap-0.5 text-[10px] font-black px-1.5 py-0.5 rounded-full ${
@@ -1581,7 +1614,9 @@ const Messages = () => {
                                     : "text-muted-foreground bg-muted/50"
                                 }`}
                               >
-                                <Flame className={`w-3 h-3 ${hasChattedToday ? styles.fill : 'fill-muted-foreground text-muted-foreground'}`} />
+                                <Flame
+                                  className={`w-3 h-3 ${hasChattedToday ? styles.fill : "fill-muted-foreground text-muted-foreground"}`}
+                                />
                                 {convo.pet.streak_count}
                               </span>
                             );
