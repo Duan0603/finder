@@ -1089,7 +1089,7 @@ const Messages = () => {
                 }
 
                 // Mock local chat logic fallback
-                if (streak.active) {
+                if (streak.active && !streak.expiring) {
                   return (
                     <span className="inline-flex items-center gap-0.5 text-xs font-black text-orange-500 bg-orange-500/10 px-2 py-0.5 rounded-full animate-pulse">
                       {streak.label}
@@ -1098,7 +1098,8 @@ const Messages = () => {
                 } else if (streak.days >= 1) {
                   return (
                     <span className="inline-flex items-center gap-0.5 text-[10px] font-bold text-muted-foreground bg-muted/50 px-1.5 py-0.5 rounded-full">
-                      {streak.label}
+                      <Flame className="w-3 h-3 fill-muted-foreground text-muted-foreground" />
+                      {streak.days}
                     </span>
                   );
                 }
@@ -1111,7 +1112,6 @@ const Messages = () => {
                 : isMockChat
                   ? "AI Chat"
                   : "Ngoại tuyến"}
-              {streak.expiring && " • ⏳ Chuỗi sắp hết hạn!"}
             </p>
           </div>
 
