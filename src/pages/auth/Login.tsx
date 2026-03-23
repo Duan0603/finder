@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -11,11 +11,13 @@ import {
   Shield,
   ArrowLeft,
   Sparkles,
+  AlertCircle,
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { motion, AnimatePresence } from "framer-motion";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -28,6 +30,23 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [isInWebView, setIsInWebView] = useState(false);
+
+  useEffect(() => {
+    const checkWebView = () => {
+      if (typeof window === "undefined") return false;
+      const ua = window.navigator.userAgent.toLowerCase();
+      return (
+        ua.includes("zalo") ||
+        ua.includes("fbav") ||
+        ua.includes("messenger") ||
+        ua.includes("instagram") ||
+        (ua.includes("safari") && ua.includes("wv")) ||
+        ua.includes("webview")
+      );
+    };
+    setIsInWebView(checkWebView());
+  }, []);
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,6 +106,14 @@ const Login = () => {
   };
 
   const handleGoogle = async () => {
+    if (isInWebView) {
+      toast({
+        title: "Trình duyệt không hỗ trợ",
+        description: "Google không cho phép đăng nhập trong ứng dụng này (WebView). Vui lòng nhấn vào biểu tượng (...) ở góc màn hình và chọn 'Mở bằng trình duyệt' để tiếp tục.",
+        variant: "destructive",
+      });
+      return;
+    }
     setIsLoading(true);
     const { error } = await signInWithGoogle();
     if (error) {
@@ -219,6 +246,24 @@ const Login = () => {
                 <p className="text-center text-sm text-muted-foreground mb-5">
                   Chọn cách đăng nhập nhanh nhất cho bạn
                 </p>
+
+                {isInWebView && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="mb-4"
+                  >
+                    <Alert variant="destructive" className="bg-destructive/10 border-destructive/20 text-destructive text-[13px] leading-snug py-3">
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertTitle className="text-sm font-bold mb-1">Cảnh báo bảo mật (WebView)</AlertTitle>
+                      <AlertDescription>
+                        Bạn đang mở ứng dụng trong một trình duyệt rút gọn. Google sẽ <b>không cho phép đăng nhập</b> tại đây.
+                        <br />
+                        <b>Hãy bấm (...) và chọn "Mở bằng trình duyệt" (Safari/Chrome).</b>
+                      </AlertDescription>
+                    </Alert>
+                  </motion.div>
+                )}
 
                 {/* Google */}
                 <motion.button
