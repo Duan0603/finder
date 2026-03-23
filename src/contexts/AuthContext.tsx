@@ -146,6 +146,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           
           if (!hasHash) {
             setLoading(false);
+          } else {
+            // Safety timeout: If OAuth hash is present but onAuthStateChange 
+            // doesn't resolve in 10s, force loading false
+            setTimeout(() => {
+              if (mounted) {
+                console.log("OAuth safety timeout reached, forcing loading false");
+                setLoading(false);
+              }
+            }, 10000);
           }
         }
       }
