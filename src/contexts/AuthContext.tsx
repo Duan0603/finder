@@ -56,10 +56,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = useCallback(async (userId: string) => {
+  const fetchProfile = useCallback(async (userId: string, retryCount = 0): Promise<any> => {
     try {
-      console.log("Fetching profile for:", userId);
-      const { data } = await supabase
+      console.log(`Fetching profile for ${userId} (attempt ${retryCount + 1})...`);
+      const { data, error: fetchError } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", userId)
@@ -70,9 +70,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setProfile(data);
         return data;
       }
+
+      if (fetchError) {
+        console.error("Error fetching profile:", fetchError);
+      }
       
-      // Profile doesn't exist yet, try to create it
-      console.log("Profile not found, attempting to create...");
+      // If not found and we have retries left, wait and try again
+      // (The database trigger might be running)
+      if (retryCount < 3) {
+        console.log(`Profile not found, waiting for trigger (retry ${retryCount + 1})...`);
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        return fetchProfile(userId, retryCount + 1);
+      }
+      
+      // Still not found after retries, try manual insert
+      console.log("Profile not found after retries, attempting manual creation...");
       const { data: newProfile, error: insertError } = await supabase
         .from("profiles")
         .insert({ id: userId })
@@ -80,20 +92,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         .single();
         
       if (newProfile) {
-        console.log("Profile created successfully:", newProfile);
+        console.log("Profile created manually:", newProfile);
         setProfile(newProfile);
         return newProfile;
       } else {
-        console.warn("Manual profile creation failed or returned no data:", insertError);
-        // Final attempt in case trigger was working
-        const { data: finalCheck } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
-        if (finalCheck) {
-          setProfile(finalCheck);
-          return finalCheck;
-        }
+        console.warn("Manual creation failed (likely missing RLS INSERT policy):", insertError);
       }
     } catch (err) {
-      console.error("fetchProfile error:", err);
+      console.error("fetchProfile critical error:", err);
     }
     return null;
   }, []);

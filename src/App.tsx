@@ -58,8 +58,8 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
       );
     }
 
-    // If profile is still missing after loading, go to explore (ProtectedRoute will handle it)
-    if (!profile) return <Navigate to="/explore" replace />;
+    // If profile is still missing after loading, go to onboarding (new user fallback)
+    if (!profile) return <Navigate to="/onboarding" replace />;
 
     // Profile loaded but no name — needs onboarding
     if (!profile.name || !profile.name.trim())
