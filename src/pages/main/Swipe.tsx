@@ -541,64 +541,69 @@ const Swipe = () => {
   useEffect(() => {
     if (!user) return;
     const fetchUsers = async () => {
-      setLoading(true);
+      try {
+        setLoading(true);
 
-      // Fetch real users from DB
-      const { data: existingLikes } = await supabase
-        .from("likes")
-        .select("to_user")
-        .eq("from_user", user.id);
-      const excludeIds = new Set(
-        (existingLikes || []).map((l: any) => l.to_user),
-      );
-      excludeIds.add(user.id);
+        // Fetch real users from DB
+        const { data: existingLikes } = await supabase
+          .from("likes")
+          .select("to_user")
+          .eq("from_user", user.id);
+        const excludeIds = new Set(
+          (existingLikes || []).map((l: any) => l.to_user),
+        );
+        excludeIds.add(user.id);
 
-      let query = supabase.from("profiles").select("*").neq("id", user.id);
-      if (
-        myProfile?.gender_preference &&
-        myProfile.gender_preference !== "all"
-      ) {
-        query = query.eq("gender", myProfile.gender_preference);
+        let query = supabase.from("profiles").select("*").neq("id", user.id);
+        if (
+          myProfile?.gender_preference &&
+          myProfile.gender_preference !== "all"
+        ) {
+          query = query.eq("gender", myProfile.gender_preference);
+        }
+
+        const { data } = await query
+          .order("last_active", { ascending: false })
+          .limit(50);
+        const dbUsers = (data || [])
+          .filter((p: any) => !excludeIds.has(p.id) && p.name)
+          .map((p: any) => ({
+            ...p,
+            distance:
+              p.lat && p.lng
+                ? haversineKm(myLat, myLng, p.lat, p.lng)
+                : undefined,
+          }));
+
+        // Add mock users with distance
+        const mockWithDist = mockSwipeUsers
+          .filter((m) => !excludeIds.has(m.id))
+          .map((m) => ({
+            ...m,
+            distance:
+              m.lat && m.lng
+                ? haversineKm(myLat, myLng, m.lat, m.lng)
+                : undefined,
+          }));
+
+        // Merge — DB first, then mock, deduplicate
+        const merged = [...dbUsers, ...mockWithDist].filter(
+          (u, i, arr) => arr.findIndex((x) => x.id === u.id) === i,
+        );
+
+        // Shuffle for variety
+        for (let i = merged.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [merged[i], merged[j]] = [merged[j], merged[i]];
+        }
+
+        setCards(merged);
+        setCurrentIndex(0);
+      } catch (err) {
+        console.error("Error in fetchUsers (Swipe):", err);
+      } finally {
+        setLoading(false);
       }
-
-      const { data } = await query
-        .order("last_active", { ascending: false })
-        .limit(50);
-      const dbUsers = (data || [])
-        .filter((p: any) => !excludeIds.has(p.id) && p.name)
-        .map((p: any) => ({
-          ...p,
-          distance:
-            p.lat && p.lng
-              ? haversineKm(myLat, myLng, p.lat, p.lng)
-              : undefined,
-        }));
-
-      // Add mock users with distance
-      const mockWithDist = mockSwipeUsers
-        .filter((m) => !excludeIds.has(m.id))
-        .map((m) => ({
-          ...m,
-          distance:
-            m.lat && m.lng
-              ? haversineKm(myLat, myLng, m.lat, m.lng)
-              : undefined,
-        }));
-
-      // Merge — DB first, then mock, deduplicate
-      const merged = [...dbUsers, ...mockWithDist].filter(
-        (u, i, arr) => arr.findIndex((x) => x.id === u.id) === i,
-      );
-
-      // Shuffle for variety
-      for (let i = merged.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [merged[i], merged[j]] = [merged[j], merged[i]];
-      }
-
-      setCards(merged);
-      setCurrentIndex(0);
-      setLoading(false);
     };
     fetchUsers();
   }, [user, myProfile?.gender_preference]);
