@@ -59,11 +59,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const fetchProfile = useCallback(async (userId: string, userMetadata?: any, retryCount = 0): Promise<any> => {
     try {
       console.log(`Fetching profile for ${userId} (attempt ${retryCount + 1})...`);
-      const { data, error: fetchError } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", userId)
-        .maybeSingle();
+      const { data, error: fetchError } = (await Promise.race([
+        supabase
+          .from("profiles")
+          .select("*")
+          .eq("id", userId)
+          .maybeSingle(),
+        new Promise((_, reject) => 
+          setTimeout(() => reject(new Error("Profile query timeout")), 5000)
+        )
+      ])) as any;
       
       if (data) {
         console.log("Profile found:", data);
