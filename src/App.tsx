@@ -49,16 +49,22 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
       </div>
     );
   if (user) {
-    // Profile is still loading asynchronously — wait for it
-    if (!profile)
+    // Wait for the auth context to finish its initial sync
+    if (loading) {
       return (
         <div className="min-h-screen flex items-center justify-center">
           <div className="w-8 h-8 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
         </div>
       );
+    }
+
+    // If profile is still missing after loading, go to explore (ProtectedRoute will handle it)
+    if (!profile) return <Navigate to="/explore" replace />;
+
     // Profile loaded but no name — needs onboarding
     if (!profile.name || !profile.name.trim())
       return <Navigate to="/onboarding" replace />;
+    
     // Profile complete — go to explore
     return <Navigate to="/explore" replace />;
   }

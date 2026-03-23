@@ -58,24 +58,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const fetchProfile = useCallback(async (userId: string) => {
     try {
+      console.log("Fetching profile for:", userId);
       const { data } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", userId)
         .maybeSingle();
+      
       if (data) {
+        console.log("Profile found:", data);
         setProfile(data);
         return data;
       }
-      // Profile doesn't exist yet, create it
-      const { data: newProfile } = await supabase
+      
+      // Profile doesn't exist yet, try to create it
+      console.log("Profile not found, attempting to create...");
+      const { data: newProfile, error: insertError } = await supabase
         .from("profiles")
         .insert({ id: userId })
         .select()
         .single();
+        
       if (newProfile) {
+        console.log("Profile created successfully:", newProfile);
         setProfile(newProfile);
         return newProfile;
+      } else {
+        console.warn("Manual profile creation failed or returned no data:", insertError);
+        // Final attempt in case trigger was working
+        const { data: finalCheck } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
+        if (finalCheck) {
+          setProfile(finalCheck);
+          return finalCheck;
+        }
       }
     } catch (err) {
       console.error("fetchProfile error:", err);
@@ -97,16 +112,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           data: { session },
         } = await supabase.auth.getSession();
         if (!mounted) return;
-        setSession(session);
-        setUser(session?.user ?? null);
-        // Set loading false IMMEDIATELY — don't wait for profile
-        setLoading(false);
-        // Fetch profile in background (non-blocking)
-        if (session?.user) {
-          fetchProfile(session.user.id);
+        
+        if (session) {
+          setSession(session);
+          setUser(session.user);
+          await fetchProfile(session.user.id);
         }
       } catch (err) {
         console.error("Failed to get session:", err);
+      } finally {
         if (mounted) setLoading(false);
       }
     };
@@ -116,15 +130,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     // Listen for auth changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (!mounted) return;
+      
+      console.log("Auth event:", event);
       setSession(session);
       setUser(session?.user ?? null);
+      
       if (session?.user) {
-        fetchProfile(session.user.id);
+        await fetchProfile(session.user.id);
       } else {
         setProfile(null);
       }
+      
       setLoading(false);
     });
 
