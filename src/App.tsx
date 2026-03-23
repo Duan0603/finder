@@ -68,8 +68,22 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
 const AppRoutes = () => (
   <Routes>
     {/* Landing page — default entry point */}
-    <Route path="/" element={<Landing />} />
-    <Route path="/home" element={<Landing />} />
+    <Route
+      path="/"
+      element={
+        <PublicRoute>
+          <Landing />
+        </PublicRoute>
+      }
+    />
+    <Route
+      path="/home"
+      element={
+        <PublicRoute>
+          <Landing />
+        </PublicRoute>
+      }
+    />
 
     {/* Auth flow */}
     <Route path="/splash" element={<Splash />} />
