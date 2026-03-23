@@ -127,7 +127,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       } catch (err) {
         console.error("Failed to get session:", err);
       } finally {
-        if (mounted) setLoading(false);
+        if (mounted) {
+          // If there's an OAuth hash in the URL, don't set loading to false yet.
+          // Let onAuthStateChange handle the session loading.
+          const hasHash = window.location.hash && (
+            window.location.hash.includes("access_token") || 
+            window.location.hash.includes("id_token") ||
+            window.location.hash.includes("error_description")
+          );
+          
+          if (!hasHash) {
+            setLoading(false);
+          }
+        }
       }
     };
 

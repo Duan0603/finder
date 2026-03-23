@@ -13,8 +13,16 @@ const AuthCallback = () => {
         // If logged in, go to the main app
         navigate("/explore", { replace: true });
       } else {
-        // Otherwise, send them back to landing or login
-        navigate("/", { replace: true });
+        // Check if we are in the middle of an OAuth redirect (hash contains tokens)
+        // If so, don't redirect to landing yet, wait for AuthContext to pick it up
+        const hasHash = window.location.hash.includes("access_token") || 
+                        window.location.hash.includes("id_token") ||
+                        window.location.hash.includes("error_description");
+        
+        if (!hasHash) {
+          // Otherwise, send them back to landing or login
+          navigate("/", { replace: true });
+        }
       }
     }
   }, [user, loading, navigate]);
