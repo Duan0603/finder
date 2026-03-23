@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProfile = useCallback(async (userId: string, retryCount = 0): Promise<any> => {
+  const fetchProfile = useCallback(async (userId: string, userMetadata?: any, retryCount = 0): Promise<any> => {
     try {
       console.log(`Fetching profile for ${userId} (attempt ${retryCount + 1})...`);
       const { data, error: fetchError } = await supabase
@@ -80,14 +80,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (retryCount < 3) {
         console.log(`Profile not found, waiting for trigger (retry ${retryCount + 1})...`);
         await new Promise(resolve => setTimeout(resolve, 1500));
-        return fetchProfile(userId, retryCount + 1);
+        return fetchProfile(userId, userMetadata, retryCount + 1);
       }
       
       // Still not found after retries, try manual insert
-      console.log("Profile not found after retries, attempting manual creation...");
+      console.log("Profile not found after retries, attempting manual creation with metadata...");
+      
+      const name = userMetadata?.full_name || userMetadata?.name || "";
+      const avatar_url = userMetadata?.avatar_url || userMetadata?.picture || "";
+      
       const { data: newProfile, error: insertError } = await supabase
         .from("profiles")
-        .insert({ id: userId })
+        .insert({ 
+          id: userId,
+          name: name,
+          avatar_url: avatar_url
+        })
         .select()
         .single();
         
@@ -105,7 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const refreshProfile = useCallback(async () => {
-    if (user) await fetchProfile(user.id);
+    if (user) await fetchProfile(user.id, user.user_metadata);
   }, [user, fetchProfile]);
 
   useEffect(() => {
@@ -122,7 +130,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (session) {
           setSession(session);
           setUser(session.user);
-          await fetchProfile(session.user.id);
+          await fetchProfile(session.user.id, session.user.user_metadata);
         }
       } catch (err) {
         console.error("Failed to get session:", err);
@@ -156,7 +164,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       
       if (session?.user) {
-        await fetchProfile(session.user.id);
+        await fetchProfile(session.user.id, session.user.user_metadata);
       } else {
         setProfile(null);
       }
